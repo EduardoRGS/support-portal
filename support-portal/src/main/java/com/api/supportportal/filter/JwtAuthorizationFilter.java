@@ -19,6 +19,7 @@ import java.util.List;
 
 import static com.api.supportportal.constant.SecurityConstant.*;
 import static org.springframework.http.HttpHeaders.*;
+import static org.springframework.http.HttpStatus.OK;
 
 @Component
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
@@ -32,11 +33,12 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         if(request.getMethod().equalsIgnoreCase(OPTIONS_HTTP_METHOD)){
-            response.setStatus(HttpStatus.OK.value());
+            response.setStatus(OK.value());
         } else {
             String authorizationHeader = request.getHeader(AUTHORIZATION);
             if(authorizationHeader == null || !authorizationHeader.startsWith(TOKEN_PREFIX)){
                 filterChain.doFilter(request,response);
+                return;
             }
             String token = authorizationHeader.substring(TOKEN_PREFIX.length());
             String username = jwtTokenProvider.getSubject(token);
