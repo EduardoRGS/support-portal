@@ -18,7 +18,7 @@ public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false, updatable = false)
-    private Long idk;
+    private Long id;
     private String userId;
     private String fistName;
     private String lastName;
@@ -29,7 +29,7 @@ public class User implements Serializable {
     private Date lastLoginDate;
     private Date lastLoginDateDisplay;
     private Date joinDate;
-    private String roles; // regras de quais funcionalidades um  userAdmin e user podem acessar
+    private String role; // papeis de quais funcionalidades um  userAdmin e user podem acessar
     private String[] authorities;
     private boolean isActive;
     private boolean isNotLocked;
