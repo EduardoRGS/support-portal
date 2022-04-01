@@ -1,7 +1,7 @@
 package com.api.supportportal.constant;
 
 public class SecurityConstant {
-    public static final long EXPIRATION_TIME =  432_000_000; //Tempo de expiração do token hwt 5 dias
+    public static final long EXPIRATION_TIME =  3_000_000; //Tempo de expiração do token jwt 1 hora
     public static final String TOKEN_PREFIX = "Bearer ";
     public static final String JWT_TOKEN_HEADER = "Jwt-Token";
     public static final String TOKEN_CANNOT_BE_VERIFIED = "Token cannot be verified";
