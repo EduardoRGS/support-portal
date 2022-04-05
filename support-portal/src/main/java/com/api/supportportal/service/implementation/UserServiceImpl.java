@@ -6,6 +6,7 @@ import com.api.supportportal.exception.domain.EmailExistException;
 import com.api.supportportal.exception.domain.UserNotFoundException;
 import com.api.supportportal.exception.domain.UsernameExistException;
 import com.api.supportportal.repository.UserRepository;
+import com.api.supportportal.service.LoginAttemptService;
 import com.api.supportportal.service.UserService;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -35,11 +36,13 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private final Logger logger = LoggerFactory.getLogger(getClass());
     private UserRepository userRepository;
     private BCryptPasswordEncoder passwordEncoder;
+    private LoginAttemptService loginAttemptService;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder, LoginAttemptService loginAttemptService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.loginAttemptService = loginAttemptService;
     }
 
     @Override
@@ -50,12 +53,25 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             logger.error(USER_NOT_FOUND_BY_USERNAME + username);
             throw new UsernameNotFoundException(USER_NOT_FOUND_BY_USERNAME);
         }else {
+            validadeLloginAttempt(user);
              user.setLastLoginDateDisplay(user.getLastLoginDate());
              user.setLastLoginDate(new Date());
              userRepository.save(user);
              UserPrincipal userPrincipal = new UserPrincipal(user);
              logger.info(RETURNING_FOUND_USER_BY_USERNAME + username);
              return userPrincipal;
+        }
+    }
+
+    private void validadeLloginAttempt(User user){
+        if(user.isNotLocked()){
+            if(loginAttemptService.hasExcodeMaxAttempts(user.getUsername())){
+                user.setNotLocked(false);
+            }else{
+                user.setActive(true);
+            }
+        }else{
+            loginAttemptService.evictUserFromLoginAttemptCache(user.getUsername());
         }
     }
 
