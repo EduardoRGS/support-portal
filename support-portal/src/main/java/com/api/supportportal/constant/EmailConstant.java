@@ -2,11 +2,11 @@ package com.api.supportportal.constant;
 
 public class EmailConstant {
     public static final String SIMPLE_AIL_TRANSFER_PROTOCOL = "smtps";
-    public static final String USERNAME = "email@gmail.com";
-    public static final String PASSWORD =  "your password";
-    public static final String FROM_EMAIL = "dudub9go@gmail.com";
+    public static final String USERNAME = "eduardotst.email@gmail.com";
+    public static final String PASSWORD =  "eduardotst/";
+    public static final String FROM_EMAIL = "eduardotst.email@gmail.com";
     public static final String CC_EMAIL = "";
-    public static final String EMAIL_SUBJECT = "Get Arrays, LLC - New Password";
+    public static final String EMAIL_SUBJECT = "Congratulations your new password is here!";
     public static final String GMAIL_SMTP_SERVER = "smtp.gmail.com";
     public static final String SMTP_HOST = "mail.smtp.host";
     public static final String SMTP_AUTH = "mail.smtp.auth";

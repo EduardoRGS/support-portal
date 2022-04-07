@@ -47,7 +47,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.loginAttemptService = loginAttemptService;
-        this.emailService =emailService;
+        this.emailService = emailService;
     }
 
     @Override
@@ -133,7 +133,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         user.setProfileImageUrl(getTemporaryProfileImageUrl());
 
         userRepository.save(user);
-        logger.info("New user password: " + password);
         emailService.sendNewPasswordEmail(fistName, password, email);
         return user;
     }

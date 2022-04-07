@@ -34,7 +34,7 @@ public class EmailService {
         message.setRecipients(TO, InternetAddress.parse(email, false));
         message.setRecipients(CC, InternetAddress.parse(CC_EMAIL, false));
         message.setSubject(EMAIL_SUBJECT);
-        message.setText("Hello" + fistName + ", \n \n Your new account password is: " + password + "\n \n The Support Team");
+        message.setText("Hello " + fistName + ", \n \n Your new account password is: " + password + "\n \n The Support Team");
         message.setSentDate(new Date());
         message.saveChanges();
         return message;
