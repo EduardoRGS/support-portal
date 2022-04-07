@@ -6,11 +6,12 @@ import com.api.supportportal.exception.domain.UserNotFoundException;
 import com.api.supportportal.exception.domain.UsernameExistException;
 import org.springframework.stereotype.Service;
 
+import javax.mail.MessagingException;
 import java.util.List;
 
 public interface UserService {
 
-    User register(String fistName, String lastName, String username, String email) throws UserNotFoundException, EmailExistException, UsernameExistException;
+    User register(String fistName, String lastName, String username, String email) throws UserNotFoundException, EmailExistException, UsernameExistException, MessagingException;
 
     List<User> getAllUsers();
 
