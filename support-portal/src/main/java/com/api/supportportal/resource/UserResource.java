@@ -1,9 +1,11 @@
 package com.api.supportportal.resource;
 
+import com.api.supportportal.domain.HttpResponse;
 import com.api.supportportal.domain.User;
 import com.api.supportportal.domain.UserPrincipal;
 import com.api.supportportal.exception.domain.EmailExistException;
 import com.api.supportportal.exception.ExceptionHandling;
+import com.api.supportportal.exception.domain.EmailNotFoundException;
 import com.api.supportportal.exception.domain.UserNotFoundException;
 import com.api.supportportal.exception.domain.UsernameExistException;
 import com.api.supportportal.service.UserService;
@@ -13,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
@@ -21,13 +24,17 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.mail.MessagingException;
 
 import java.io.IOException;
+import java.util.List;
 
 import static com.api.supportportal.constant.SecurityConstant.JWT_TOKEN_HEADER;
+import static org.springframework.http.HttpStatus.*;
 
 @RestController
 @RequestMapping(path = {"/","/user"})
 public class UserResource extends ExceptionHandling {
 
+    public static final String EMAIL_SENT = "An Email with a new password was sent to: ";
+    public static final String USER_DELETED_SUCCESSFULLY = "User deleted successfully";
     private UserService userService;
     private AuthenticationManager authenticationManager;
     private JWTTokenProvider jwtTokenProvider;
@@ -45,17 +52,17 @@ public class UserResource extends ExceptionHandling {
         User loginUser =  userService.findByUsername(user.getUsername());
         UserPrincipal userPrincipal = new UserPrincipal(loginUser);
         HttpHeaders jwtHeader = getJwtHeaders(userPrincipal);
-        return new ResponseEntity<>(loginUser, jwtHeader, HttpStatus.OK);
+        return new ResponseEntity<>(loginUser, jwtHeader, OK);
     }
 
     @PostMapping("/register")
     public ResponseEntity<User> registerUser(@RequestBody User user)
             throws UserNotFoundException, EmailExistException, UsernameExistException, MessagingException {
         User newUser = userService.register(user.getFistName(), user.getLastName(), user.getUsername(), user.getEmail());
-        return new ResponseEntity<>(newUser, HttpStatus.OK);
+        return new ResponseEntity<>(newUser, OK);
    }
 
-   @PostMapping("/add")
+    @PostMapping("/add")
     public ResponseEntity<User> addNewUser(@RequestParam("fistName") String fistName,
                                            @RequestParam("lastName") String lastName,
                                            @RequestParam("username") String username,
@@ -67,8 +74,63 @@ public class UserResource extends ExceptionHandling {
            throws UserNotFoundException, EmailExistException, IOException, UsernameExistException {
         User newUser = userService.addNewUser(fistName, lastName, username, email, role,
                 Boolean.parseBoolean(isActive), Boolean.parseBoolean(isNotLocked), profileImage);
-        return new ResponseEntity<>(newUser, HttpStatus.OK);
+        return new ResponseEntity<>(newUser, OK);
    }
+
+    @PutMapping("/update")
+    public ResponseEntity<User> updateUser(@RequestParam("currentUsername") String currentUsername,
+                                           @RequestParam("fistName") String fistName,
+                                           @RequestParam("lastName") String lastName,
+                                           @RequestParam("username") String username,
+                                           @RequestParam("email") String email,
+                                           @RequestParam("role") String role,
+                                           @RequestParam("isActive") String isActive,
+                                           @RequestParam("isNotLocked") String isNotLocked,
+                                           @RequestParam( value = "profileImage", required = false) MultipartFile profileImage)
+            throws UserNotFoundException, EmailExistException, IOException, UsernameExistException {
+        User updateUser = userService.updateUser(currentUsername, fistName, lastName, username, email, role,
+                Boolean.parseBoolean(isActive), Boolean.parseBoolean(isNotLocked), profileImage);
+        return new ResponseEntity<>(updateUser, OK);
+    }
+
+    @GetMapping("/find/{username}")
+    public ResponseEntity<User> getUser(@PathVariable("username") String username){
+        User user = userService.findByUsername(username);
+        return new ResponseEntity<>(user, OK);
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<User>> getAllUsers(){
+        List<User> users = userService.getAllUsers();
+        return new ResponseEntity<>(users, OK);
+    }
+
+    @GetMapping("/resetPassword/{email}")
+    public ResponseEntity<HttpResponse> resetPassword(@PathVariable("email") String email)
+            throws EmailNotFoundException, MessagingException {
+        userService.resetPassword(email);
+        return response(OK, EMAIL_SENT + email);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    @PreAuthorize("hasAnyAuthority('user:delete')")
+    public ResponseEntity<HttpResponse> deleteUser(@PathVariable("id") long id){
+        userService.deleteUser(id);
+        return response(NO_CONTENT, USER_DELETED_SUCCESSFULLY);
+    }
+
+    @PutMapping("/updateProfileImage")
+    public ResponseEntity<User> updateProfileImage (@RequestParam("username") String username,
+                                                    @RequestParam( value = "profileImage", required = false) MultipartFile profileImage)
+            throws UserNotFoundException, EmailExistException, IOException, UsernameExistException {
+        User user = userService.updateProfileImage(username, profileImage);
+        return new ResponseEntity<>(user, OK);
+    }
+
+    private ResponseEntity<HttpResponse> response(HttpStatus httpStatus, String message) {
+        return new ResponseEntity<>(new HttpResponse(httpStatus.value(), httpStatus, httpStatus.getReasonPhrase().toUpperCase(),
+                message.toUpperCase()), httpStatus);
+    }
 
     private HttpHeaders getJwtHeaders(UserPrincipal userPrincipal) {
         HttpHeaders headers = new HttpHeaders();
