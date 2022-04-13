@@ -244,15 +244,15 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private void saveProfileImage(User user, MultipartFile profileImage) throws IOException {
         if(profileImage != null){
                                         //user/home/supportportal/user/nameUser
-            Path userfolder = Paths.get(USER_FOLDER + user.getUsername()).toAbsolutePath().normalize();
-            if(!Files.exists(userfolder)){
-                Files.createDirectories(userfolder);
-                logger.info(DIRECTORY_CREATED + userfolder);
+            Path userFolder = Paths.get(USER_FOLDER + user.getUsername()).toAbsolutePath().normalize();
+            if(!Files.exists(userFolder)){
+                Files.createDirectories(userFolder);
+                logger.info(DIRECTORY_CREATED + userFolder);
             }
-            Files.deleteIfExists(Paths.get(userfolder + user.getUsername() + DOT + JPG_EXTENSION));
-            Files.copy(profileImage.getInputStream(), userfolder.resolve(user.getUsername() + DOT + JPG_EXTENSION),
+            Files.deleteIfExists(Paths.get(userFolder + user.getUsername() + DOT + JPG_EXTENSION));
+            Files.copy(profileImage.getInputStream(), userFolder.resolve(user.getUsername() + DOT + JPG_EXTENSION),
                     REPLACE_EXISTING);
-            user.setProfileImageUrl(setProfileImageUrl(user.getUsername()));
+            user.setProfileImageUrl(setProfileImageUrl(user.getUsername()));  //here
             userRepository.save(user);
             logger.info(FILE_SAVED_IN_FILE_SYSTEM + profileImage.getOriginalFilename());
         }
@@ -264,6 +264,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     private Role getRoleEnumName(String role) {
-        return Role.valueOf(role.toLowerCase());
+        return Role.valueOf(role.toUpperCase());
     }
 }

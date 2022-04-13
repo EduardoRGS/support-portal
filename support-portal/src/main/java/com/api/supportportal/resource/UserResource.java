@@ -10,7 +10,6 @@ import com.api.supportportal.exception.domain.UserNotFoundException;
 import com.api.supportportal.exception.domain.UsernameExistException;
 import com.api.supportportal.service.UserService;
 import com.api.supportportal.utility.JWTTokenProvider;
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -76,11 +75,11 @@ public class UserResource extends ExceptionHandling {
                                            @RequestParam("email") String email,
                                            @RequestParam("role") String role,
                                            @RequestParam("isActive") String isActive,
-                                           @RequestParam("isNotLocked") String isNotLocked,
+                                           @RequestParam("isNonLocked") String isNonLocked,
                                            @RequestParam( value = "profileImage", required = false) MultipartFile profileImage)
            throws UserNotFoundException, EmailExistException, IOException, UsernameExistException {
         User newUser = userService.addNewUser(fistName, lastName, username, email, role,
-                Boolean.parseBoolean(isActive), Boolean.parseBoolean(isNotLocked), profileImage);
+                Boolean.parseBoolean(isActive), Boolean.parseBoolean(isNonLocked), profileImage);
         return new ResponseEntity<>(newUser, OK);
    }
 
