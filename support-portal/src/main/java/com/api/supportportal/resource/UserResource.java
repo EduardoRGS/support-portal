@@ -91,11 +91,11 @@ public class UserResource extends ExceptionHandling {
                                            @RequestParam("email") String email,
                                            @RequestParam("role") String role,
                                            @RequestParam("isActive") String isActive,
-                                           @RequestParam("isNotLocked") String isNotLocked,
+                                           @RequestParam("isNonLocked") String isNonLocked,
                                            @RequestParam( value = "profileImage", required = false) MultipartFile profileImage)
             throws UserNotFoundException, EmailExistException, IOException, UsernameExistException {
         User updateUser = userService.updateUser(currentUsername, fistName, lastName, username, email, role,
-                Boolean.parseBoolean(isActive), Boolean.parseBoolean(isNotLocked), profileImage);
+                Boolean.parseBoolean(isActive), Boolean.parseBoolean(isNonLocked), profileImage);
         return new ResponseEntity<>(updateUser, OK);
     }
 
@@ -159,7 +159,7 @@ public class UserResource extends ExceptionHandling {
 
     private HttpHeaders getJwtHeaders(UserPrincipal userPrincipal) {
         HttpHeaders headers = new HttpHeaders();
-        headers.add(JWT_TOKEN_HEADER, jwtTokenProvider.genetareJwtToken(userPrincipal));
+        headers.add(JWT_TOKEN_HEADER, jwtTokenProvider.generateJwtToken(userPrincipal));
         return headers;
     }
 

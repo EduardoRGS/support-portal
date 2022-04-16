@@ -67,7 +67,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             logger.error(USER_NOT_FOUND_BY_USERNAME + username);
             throw new UsernameNotFoundException(USER_NOT_FOUND_BY_USERNAME);
         }else {
-            validadeLloginAttempt(user);
+            validateLoginAttempt(user);
              user.setLastLoginDateDisplay(user.getLastLoginDate());
              user.setLastLoginDate(new Date());
              userRepository.save(user);
@@ -100,6 +100,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         user.setProfileImageUrl(getTemporaryProfileImageUrl(username));
 
         userRepository.save(user);
+        logger.info("your new passoword " + password);
         emailService.sendNewPasswordEmail(fistName, password, email);
         return user;
     }
@@ -139,6 +140,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         user.setAuthorities(getRoleEnumName(role).getAuthorities());
         user.setProfileImageUrl(getTemporaryProfileImageUrl(username));
         userRepository.save(user);
+        logger.info("your new password " + password);
         saveProfileImage(user, profileImage);
         return user;
     }
@@ -190,7 +192,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return ServletUriComponentsBuilder.fromCurrentContextPath().path(DEFAULT_USER_IMAGE_PATH + username).toUriString();
     }
 
-    private void validadeLloginAttempt(User user){
+    private void validateLoginAttempt(User user){
         if(user.isNotLocked()){
             if(loginAttemptService.hasExcodeMaxAttempts(user.getUsername())){
                 user.setNotLocked(false);

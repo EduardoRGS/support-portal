@@ -20,14 +20,14 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public class JwtAccessDeniedHandler implements AccessDeniedHandler {
 
     @Override
-    public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException exception) throws IOException, ServletException {
-        HttpResponse httpResponsec = new HttpResponse(UNAUTHORIZED.value(), UNAUTHORIZED,
+    public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException exception) throws IOException{
+        HttpResponse httpResponse = new HttpResponse(UNAUTHORIZED.value(), UNAUTHORIZED,
                 UNAUTHORIZED.getReasonPhrase().toUpperCase(), SecurityConstant.ACCESS_DENIED_MESSAGE);
         response.setContentType(APPLICATION_JSON_VALUE);
         response.setStatus(UNAUTHORIZED.value());
         OutputStream outputStream = response.getOutputStream();
         ObjectMapper mapper = new ObjectMapper();
-        mapper.writeValue(outputStream, httpResponsec);
+        mapper.writeValue(outputStream, httpResponse);
         outputStream.flush();
     }
 }

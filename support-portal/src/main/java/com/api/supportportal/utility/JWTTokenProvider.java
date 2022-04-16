@@ -1,6 +1,5 @@
 package com.api.supportportal.utility;
 
-import com.api.supportportal.constant.SecurityConstant;
 import static com.api.supportportal.constant.SecurityConstant.*;
 import static com.auth0.jwt.algorithms.Algorithm.HMAC512;
 import static java.util.Arrays.stream;
@@ -31,7 +30,7 @@ public class JWTTokenProvider {
     @Value("${jwt.secret}")
     private String secret;
 
-    public String genetareJwtToken(UserPrincipal userPrincipal){
+    public String generateJwtToken(UserPrincipal userPrincipal){
         String[] claims = getClaimsFromUser(userPrincipal);
         return JWT.create().withIssuer(GET_ARRAYS_LLC).withAudience(GET_ARRAYS_ADMINISTRATION)
                 .withIssuedAt(new Date()).withSubject(userPrincipal.getUsername())
@@ -52,7 +51,7 @@ public class JWTTokenProvider {
 
     public boolean isTokenValid(String username, String token){
         JWTVerifier verifier = getJWTVerifier();
-        return StringUtils.isNotEmpty(username) && !isTokenExpirad(verifier, token);
+        return StringUtils.isNotEmpty(username) && !isTokenExpired(verifier, token);
     }
 
     public String getSubject(String token){
@@ -60,7 +59,7 @@ public class JWTTokenProvider {
         return verifier.verify(token).getSubject();
     }
 
-    private boolean isTokenExpirad(JWTVerifier verifier, String token) {
+    private boolean isTokenExpired(JWTVerifier verifier, String token) {
         Date expiration = verifier.verify(token).getExpiresAt();
         return expiration.before(new Date());
     }
