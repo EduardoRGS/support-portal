@@ -37,6 +37,7 @@ import static org.springframework.http.MediaType.IMAGE_JPEG_VALUE;
 
 @RestController
 @RequestMapping(path = {"/","/user"})
+@CrossOrigin("http://localhost:4200")
 public class UserResource extends ExceptionHandling {
 
     public static final String EMAIL_SENT = "An Email with a new password was sent to: ";
