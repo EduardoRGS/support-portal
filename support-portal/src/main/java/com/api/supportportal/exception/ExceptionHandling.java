@@ -112,4 +112,13 @@ public class ExceptionHandling implements ErrorController{
         return createHttpResponse(BAD_REQUEST, exception.getMessage());
     }
 
+    @RequestMapping(ERROR_PATH)
+    public ResponseEntity<HttpResponse> notFound404() {
+        return createHttpResponse(NOT_FOUND, "There is no mapping for this URL");
+    }
+
+
+    public String getErrorPath() {
+        return ERROR_PATH;
+    }
 }
