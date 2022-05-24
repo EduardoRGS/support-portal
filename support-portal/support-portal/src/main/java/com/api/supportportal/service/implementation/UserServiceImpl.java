@@ -87,7 +87,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         user.setUserId(generatedUserid());
         String password = generatePassword();
 
-        user.setFistName(fistName);
+        user.setFirstName(fistName);
         user.setLastName(lastName);
         user.setUsername(username);
         user.setEmail(email);
@@ -128,7 +128,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         User user = new User();
         user.setUserId(generatedUserid());
         String password = generatePassword();
-        user.setFistName(fistName);
+        user.setFirstName(fistName);
         user.setLastName(lastName);
         user.setJoinDate(new Date());
         user.setUsername(username);
@@ -150,7 +150,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                            String role, boolean isNonLocked, boolean isActive, MultipartFile newProfileImage)
             throws UserNotFoundException, EmailExistException, UsernameExistException, IOException {
         User currentUser = validateNewUsernameAndEmail(currentUsername, newUsername, newEmail);
-        currentUser.setFistName(newFistName);
+        currentUser.setFirstName(newFistName);
         currentUser.setLastName(newLastName);
         currentUser.setUsername(newUsername);
         currentUser.setEmail(newEmail);
@@ -177,7 +177,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         String password = generatePassword();
         user.setPassword(encodePassword(password));
         userRepository.save(user);
-        emailService.sendNewPasswordEmail(user.getFistName(), password, user.getEmail());
+        emailService.sendNewPasswordEmail(user.getFirstName(), password, user.getEmail());
     }
 
     @Override
