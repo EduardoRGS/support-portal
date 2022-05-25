@@ -26,13 +26,9 @@ public class User implements Serializable {
     private String username;
     private String password;
     private String email;
-
     private String profileImageUrl;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy hh:mm:ss", timezone = "America/Sao_Paulo")
     private Date lastLoginDate;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy hh:mm:ss", timezone = "America/Sao_Paulo")
     private Date lastLoginDateDisplay;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy hh:mm:ss", timezone = "America/Sao_Paulo")
     private Date joinDate;
 
     private String role; // papeis de quais funcionalidades um  userAdmin e user podem acessar
