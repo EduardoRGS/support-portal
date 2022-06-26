@@ -64,7 +64,8 @@ public class UserResource extends ExceptionHandling {
     @PostMapping("/register")
     public ResponseEntity<User> registerUser(@RequestBody User user)
             throws UserNotFoundException, EmailExistException, UsernameExistException, MessagingException {
-        User newUser = userService.register(user.getFirstName(), user.getLastName(), user.getUsername(), user.getEmail());
+        User newUser = userService.register(user.getFirstName(), user.getLastName(), user.getUsername(),user.getPassword(),
+                user.getEmail());
         return new ResponseEntity<>(newUser, OK);
    }
 
@@ -72,13 +73,14 @@ public class UserResource extends ExceptionHandling {
     public ResponseEntity<User> addNewUser(@RequestParam("fistName") String fistName,
                                            @RequestParam("lastName") String lastName,
                                            @RequestParam("username") String username,
+                                           @RequestParam("password") String password,
                                            @RequestParam("email") String email,
                                            @RequestParam("role") String role,
                                            @RequestParam("isActive") String isActive,
                                            @RequestParam("isNonLocked") String isNonLocked,
                                            @RequestParam( value = "profileImage", required = false) MultipartFile profileImage)
            throws UserNotFoundException, EmailExistException, IOException, UsernameExistException {
-        User newUser = userService.addNewUser(fistName, lastName, username, email, role,
+        User newUser = userService.addNewUser(fistName, lastName, username,password, email, role,
                 Boolean.parseBoolean(isActive), Boolean.parseBoolean(isNonLocked), profileImage);
         return new ResponseEntity<>(newUser, OK);
    }

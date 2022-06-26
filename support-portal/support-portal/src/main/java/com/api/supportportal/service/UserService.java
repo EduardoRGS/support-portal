@@ -14,7 +14,7 @@ import java.util.List;
 
 public interface UserService {
 
-    User register(String fistName, String lastName, String username, String email)
+    User register(String fistName, String lastName, String username, String Password, String email)
             throws UserNotFoundException, EmailExistException, UsernameExistException, MessagingException;
 
     List<User> getAllUsers();
@@ -23,10 +23,10 @@ public interface UserService {
 
     User findUserByEmail(String email);
 
-    User addNewUser(String fistName, String lastName, String username, String email,
+    User addNewUser(String fistName, String lastName, String username, String email, String password,
                     String role, boolean isNonLocked, boolean isActive, MultipartFile profileImage) throws UserNotFoundException, EmailExistException, UsernameExistException, IOException;
 
-    User updateUser(String currentUsername, String newFistName, String newLastName, String newUsername, String newEmail,
+    User updateUser(String currentUsername, String newFirstName, String newLastName, String newUsername, String newEmail,
                     String role, boolean isNonLocked, boolean isActive, MultipartFile newProfileImage) throws UserNotFoundException, EmailExistException, UsernameExistException, IOException;
 
     User updateProfileImage(String username, MultipartFile profileImage) throws UserNotFoundException, EmailExistException, UsernameExistException, IOException;
